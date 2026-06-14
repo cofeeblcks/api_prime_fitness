@@ -1,5 +1,7 @@
 <?php
 
+use App\Constants\StatusesConstants;
+use App\Enums\SexEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,12 +15,23 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('email')->unique();
+            $table->string('phone')->unique();
+            $table->date('birthdate');
+            $table->enum('sex', SexEnum::cases());
+            $table->string('identification');
+            $table->string('photo')->nullable();
+            $table->double('height')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->foreignId('role_id')->constrained();
+            $table->foreignId('status_id')->default(StatusesConstants::ACTIVE)->constrained();
+            $table->foreignId('identification_type_id')->constrained();
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

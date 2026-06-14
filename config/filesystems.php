@@ -77,4 +77,13 @@ return [
         public_path('storage') => storage_path('app/public'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | File Size
+    |--------------------------------------------------------------------------
+    |
+    | Here you may specify the maximum file size that will be allowed to be uploaded.
+    |
+    */
+    'file_size' => env('FILE_SIZE', 2048),
 ];
