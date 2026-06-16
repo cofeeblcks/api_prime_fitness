@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -56,14 +57,14 @@ class User extends Authenticatable
     protected function initials(): Attribute
     {
         return Attribute::make(
-            get: fn () => strtoupper(substr($this->first_name, 0, 1) . substr($this->last_name, 0, 1)),
+            get: fn () => strtoupper(substr($this->first_name, 0, 1).substr($this->last_name, 0, 1)),
         );
     }
 
     protected function fullName(): Attribute
     {
         return Attribute::make(
-            get: fn () => ucfirst($this->first_name) . ' ' . ucfirst($this->last_name),
+            get: fn () => ucfirst($this->first_name).' '.ucfirst($this->last_name),
         );
     }
 
@@ -102,5 +103,10 @@ class User extends Authenticatable
             ->using(Fingerprint::class)
             ->withPivot('id', 'fingerprint')
             ->withTimestamps();
+    }
+
+    public function weightControls(): HasMany
+    {
+        return $this->hasMany(WeightControl::class);
     }
 }

@@ -7,6 +7,7 @@ use App\Enums\SexEnum;
 use App\Models\IdentificationType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
@@ -16,6 +17,11 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        if (config('app.env') === 'local') {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            User::truncate();
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
         User::firstOrCreate([
             'first_name' => 'Gestor',
             'last_name' => 'Plataforma',

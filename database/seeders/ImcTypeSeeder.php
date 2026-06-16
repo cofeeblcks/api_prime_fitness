@@ -24,7 +24,7 @@ class ImcTypeSeeder extends Seeder
                 'description' => 'Desnutrición grave con alto riesgo de complicaciones orgánicas y deficiencias nutricionales.',
                 'recommendation' => 'Atención médica urgente, evaluación nutricional especializada, plan de recuperación supervisado.',
                 'min_value' => 0,
-                'max_value' => 15.9,
+                'max_value' => 16.0,
                 'color' => '#8E44AD',
             ],
             [
@@ -33,7 +33,7 @@ class ImcTypeSeeder extends Seeder
                 'description' => 'Peso por debajo del rango saludable. Puede indicar ingesta insuficiente o patología subyacente.',
                 'recommendation' => 'Aumentar ingesta calórica con alimentos nutritivos, consultar con nutricionista, descartar causas médicas.',
                 'min_value' => 16.0,
-                'max_value' => 18.4,
+                'max_value' => 18.5,
                 'color' => '#2980B9',
             ],
             [
@@ -42,7 +42,7 @@ class ImcTypeSeeder extends Seeder
                 'description' => 'Rango considerado saludable. Menor riesgo de enfermedades crónicas asociadas al peso.',
                 'recommendation' => 'Mantener hábitos actuales: dieta equilibrada, actividad física regular (150 min/sem), controles médicos periódicos.',
                 'min_value' => 18.5,
-                'max_value' => 24.9,
+                'max_value' => 25.0,
                 'color' => '#27AE60',
             ],
             [
@@ -51,7 +51,7 @@ class ImcTypeSeeder extends Seeder
                 'description' => 'Exceso de peso que puede aumentar el riesgo de hipertensión, diabetes tipo 2 y enfermedades cardiovasculares.',
                 'recommendation' => 'Reducir consumo de ultraprocesados y azúcares, incrementar actividad física, objetivo de pérdida gradual (0.5–1 kg/sem).',
                 'min_value' => 25.0,
-                'max_value' => 29.9,
+                'max_value' => 30.0,
                 'color' => '#F39C12',
             ],
             [
@@ -60,7 +60,7 @@ class ImcTypeSeeder extends Seeder
                 'description' => 'Obesidad moderada. Riesgo elevado de síndrome metabólico, apnea del sueño y problemas articulares.',
                 'recommendation' => 'Intervención médica y nutricional estructurada, ejercicio aeróbico y de fuerza, evaluar factores de riesgo cardiovascular.',
                 'min_value' => 30.0,
-                'max_value' => 34.9,
+                'max_value' => 35.0,
                 'color' => '#E67E22',
             ],
             [
@@ -69,7 +69,7 @@ class ImcTypeSeeder extends Seeder
                 'description' => 'Obesidad severa con riesgo muy alto de comorbilidades graves como diabetes, cardiopatía e insuficiencia renal.',
                 'recommendation' => 'Seguimiento médico multidisciplinario, posible indicación de medicamentos, considerar programa de pérdida de peso intensivo.',
                 'min_value' => 35.0,
-                'max_value' => 39.9,
+                'max_value' => 40.0,
                 'color' => '#E74C3C',
             ],
             [
@@ -78,7 +78,7 @@ class ImcTypeSeeder extends Seeder
                 'description' => 'Obesidad mórbida. Riesgo extremo de complicaciones letales. Impacto severo en movilidad y calidad de vida.',
                 'recommendation' => 'Evaluación para cirugía bariátrica, seguimiento médico continuo, apoyo psicológico, rehabilitación física adaptada.',
                 'min_value' => 40.0,
-                'max_value' => null,
+                'max_value' => 1000.0,
                 'color' => '#C0392B',
             ],
         ];

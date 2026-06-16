@@ -17,4 +17,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ImcType extends Model
 {
     use SoftDeletes;
+
+    protected function casts(): array
+    {
+        return [
+            'min_value' => 'double',
+            'max_value' => 'double',
+        ];
+    }
 }

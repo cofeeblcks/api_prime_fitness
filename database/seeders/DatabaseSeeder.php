@@ -26,13 +26,18 @@ class DatabaseSeeder extends Seeder
             ImcTypeSeeder::class,
         ]);
 
-        if( config('app.env') === 'local' ) {
+        if (config('app.env') === 'local') {
             User::factory(500)->create()->each(function ($user) {
-                $weigth = fake()->randomFloat(2, 50, 300);
-                $imc = $weigth / ($user->height ** 2);
-                $imcType = ImcType::where('min_value', '<=', $imc)->where('max_value', '>=', $imc)->first();
+                $weight = fake()->randomFloat(2, 50, 300);
+                $imc = $weight / ($user->height ** 2);
+                $imcType = ImcType::query()
+                    ->where('min_value', '<=', $imc)
+                    ->where('max_value', '>=', $imc)
+                    ->orderByDesc('min_value')
+                    ->first();
+
                 $user->weightControls()->create([
-                    'weight' => $weigth,
+                    'weight' => $weight,
                     'imc' => $imc,
                     'imc_type_id' => $imcType->id,
                 ]);
