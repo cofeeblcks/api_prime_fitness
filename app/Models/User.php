@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\SexEnum;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -71,7 +72,14 @@ class User extends Authenticatable
     protected function photo(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => $value ? Storage::url($value) : null,
+            get: fn (?string $value) => $value ? Storage::url($value) : null,
+        );
+    }
+
+    protected function age(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => (int) Carbon::parse($this->birthdate)->diffInYears(Carbon::now()),
         );
     }
 

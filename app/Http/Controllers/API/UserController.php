@@ -6,10 +6,9 @@ use App\Actions\Users\CreateUser;
 use App\Actions\Users\UpdateUser;
 use App\Constants\ApiStatuses;
 use App\Constants\ErrorMessages;
-use App\Enums\RoleEnum;
 use App\Helpers\MessageHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserIndexRequest;
+use App\Http\Requests\UserListRequest;
 use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
@@ -26,32 +25,15 @@ class UserController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 */
-	public function index(UserIndexRequest $request): JsonResponse
+	public function index(UserListRequest $request): JsonResponse
 	{
 		$validated = $request->validated();
 
-		// Determinar si se deben obtener todos los datos o un subconjunto
-		$allData = $validated['full_data'] ?? true;
-
-		/** @var \App\Models\User $user */
+		/** @var User $user */
 		$user = Auth::user();
 
-		// Verificar si el usuario tiene permiso para ver todos los usuarios
-		$canViewAll = in_array($user->role_id, [
-			RoleEnum::ADMIN->value,
-		]);
-
-		// Determinar si se deben mostrar todos los usuarios o solo los visibles para el usuario
-		$all = ($validated['all'] ?? false) && $canViewAll;
-
-		// Definir las relaciones a cargar según el parámetro full_data
-		$relations = $allData
-			? ['role', 'identificationType']
-			: ['role', 'callCenters', 'users'];
-
-		// Construir la consulta
 		$query = User::query()
-			->with($relations)
+			->with(['role', 'identificationType'])
 			->orderBy('first_name')
 			->orderBy('last_name');
 
@@ -79,9 +61,6 @@ class UserController extends Controller
 						}
 					});
 				});
-		} else {
-			// Aplicar visibilidad según el rol del usuario autenticado
-			$query->visibleFor($user, $all);
 		}
 
 		$meta = [];
@@ -98,13 +77,8 @@ class UserController extends Controller
 			$users = $query->get();
 		}
 
-		// Preparar la colección de recursos según el parámetro full_data
-		$resource = $allData
-			? UserResource::collection($users)
-			: UserResource::collection($users);
-
 		return $this->successResponse(
-			$resource,
+			UserResource::collection($users),
 			MessageHelper::make(self::ENTITY, __FUNCTION__, true),
 			$meta
 		);

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\RoleEnum;
 use App\Enums\SexEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -23,7 +22,7 @@ class UserRequest extends FormRequest
             ],
             'phone' => ['required', 'string', 'max:13'],
             'birthdate' => ['required', 'date'],
-            'sex' => ['required', 'in:'.implode(',', SexEnum::cases())],
+            'sex' => ['required', Rule::enum(SexEnum::class)],
             'identification' => [
                 'required', 'string', 'max:255', $isUpdate ?
                 'exists:users,identification' :
@@ -31,7 +30,7 @@ class UserRequest extends FormRequest
             ],
             'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:'.config('filesystems.file_size')],
             'height' => ['nullable', 'numeric', 'min:0.50', 'max:2.50'],
-            'password' => [Rule::requiredIf(!$this->user() && !$isUpdate), 'nullable', 'string', 'min:6'],
+            'password' => [Rule::requiredIf(!$isUpdate), 'nullable', 'string', 'min:6'],
             'roleId' => ['required', 'numeric', 'exists:roles,id'],
             'identificationTypeId' => ['required', 'numeric', 'exists:identification_types,id'],
         ];

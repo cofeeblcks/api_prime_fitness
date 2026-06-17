@@ -12,7 +12,7 @@ class RoleResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'modules' => ModuleRoleResource::collection($this->whenLoaded('modules')),
+            'modules' => ModuleRoleResource::collection($this->whenLoaded('modules')->where('is_active', true)->sortBy('order')),
         ];
     }
 }

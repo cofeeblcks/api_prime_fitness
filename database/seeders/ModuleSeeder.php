@@ -23,7 +23,7 @@ class ModuleSeeder extends Seeder
                 'id' => 1,
                 'name' => 'Métricas',
                 'route' => 'metrics',
-                'icon' => 'fas fa-chart-line',
+                'icon' => 'chart-bar-line',
                 'order' => 1,
                 'is_active' => true,
                 'roles' => [
@@ -34,7 +34,7 @@ class ModuleSeeder extends Seeder
                 'id' => 2,
                 'name' => 'Miembros',
                 'route' => 'members',
-                'icon' => 'fas fa-users',
+                'icon' => 'user-group-03',
                 'order' => 2,
                 'is_active' => true,
                 'roles' => [
@@ -45,7 +45,7 @@ class ModuleSeeder extends Seeder
                 'id' => 3,
                 'name' => 'Entrenadores',
                 'route' => 'trainers',
-                'icon' => 'fas fa-users',
+                'icon' => 'workout-gymnastics',
                 'order' => 3,
                 'is_active' => true,
                 'roles' => [
@@ -56,7 +56,7 @@ class ModuleSeeder extends Seeder
                 'id' => 4,
                 'name' => 'Planes',
                 'route' => 'plans',
-                'icon' => 'fas fa-calendar-alt',
+                'icon' => 'list-tree',
                 'order' => 4,
                 'is_active' => true,
                 'roles' => [
@@ -67,7 +67,7 @@ class ModuleSeeder extends Seeder
                 'id' => 5,
                 'name' => 'Membresías',
                 'route' => 'payments',
-                'icon' => 'fas fa-calendar-alt',
+                'icon' => 'payment-01',
                 'order' => 5,
                 'is_active' => true,
                 'roles' => [
@@ -78,7 +78,7 @@ class ModuleSeeder extends Seeder
                 'id' => 6,
                 'name' => 'Usuarios',
                 'route' => 'users',
-                'icon' => 'fas fa-cog',
+                'icon' => 'user-settings-01',
                 'order' => 6,
                 'is_active' => true,
                 'roles' => [
@@ -89,7 +89,7 @@ class ModuleSeeder extends Seeder
                 'id' => 7,
                 'name' => 'Control de acceso',
                 'route' => 'access-control',
-                'icon' => 'fas fa-lock',
+                'icon' => 'device-access',
                 'order' => 7,
                 'is_active' => true,
                 'roles' => [
