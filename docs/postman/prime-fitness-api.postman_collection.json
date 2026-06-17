@@ -1,0 +1,417 @@
+{
+  "info": {
+    "name": "Prime Fitness API",
+    "description": "Colección para probar la API de Prime Fitness. Ejecuta primero Auth > Login para obtener el token.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "member_id",
+      "value": "1"
+    },
+    {
+      "key": "trainer_id",
+      "value": "1"
+    },
+    {
+      "key": "plan_id",
+      "value": "1"
+    },
+    {
+      "key": "payment_id",
+      "value": "1"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\"\n}"
+            },
+            "url": "{{base_url}}/api/auth/login"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const json = pm.response.json();",
+                  "    if (json.data && json.data.access_token) {",
+                  "        pm.collectionVariables.set('token', json.data.access_token);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Lookups",
+      "item": [
+        {
+          "name": "Identification Types",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/lookups/identification-types?per_page=25"
+          }
+        },
+        {
+          "name": "Roles",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/lookups/roles?per_page=25"
+          }
+        },
+        {
+          "name": "Plans",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/lookups/plans?per_page=25"
+          }
+        },
+        {
+          "name": "Suscription Types",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/lookups/suscription-types?per_page=25"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Members",
+      "item": [
+        {
+          "name": "List Members",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/members?per_page=25&search="
+          }
+        },
+        {
+          "name": "Create Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez\",\n  \"email\": \"juan@example.com\",\n  \"phone\": \"3001234567\",\n  \"birthdate\": \"1990-01-15\",\n  \"sex\": 1,\n  \"identification\": \"1234567890\",\n  \"height\": 1.75,\n  \"password\": \"secret123\",\n  \"identificationTypeId\": 1\n}"
+            },
+            "url": "{{base_url}}/api/members"
+          }
+        },
+        {
+          "name": "Show Member",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/members/{{member_id}}"
+          }
+        },
+        {
+          "name": "Update Member",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Juan\",\n  \"lastName\": \"Pérez Updated\",\n  \"email\": \"juan@example.com\",\n  \"phone\": \"3001234567\",\n  \"birthdate\": \"1990-01-15\",\n  \"sex\": 1,\n  \"identification\": \"1234567890\",\n  \"height\": 1.75,\n  \"identificationTypeId\": 1\n}"
+            },
+            "url": "{{base_url}}/api/members/{{member_id}}"
+          }
+        },
+        {
+          "name": "Delete Member",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/members/{{member_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trainers",
+      "item": [
+        {
+          "name": "List Trainers",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/trainers?per_page=25"
+          }
+        },
+        {
+          "name": "Create Trainer",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Gómez\",\n  \"email\": \"carlos@example.com\",\n  \"phone\": \"3009876543\",\n  \"birthdate\": \"1985-06-20\",\n  \"sex\": 1,\n  \"identification\": \"9876543210\",\n  \"height\": 1.80,\n  \"password\": \"secret123\",\n  \"identificationTypeId\": 1\n}"
+            },
+            "url": "{{base_url}}/api/trainers"
+          }
+        },
+        {
+          "name": "Show Trainer",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/trainers/{{trainer_id}}"
+          }
+        },
+        {
+          "name": "Update Trainer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Carlos\",\n  \"lastName\": \"Gómez Updated\",\n  \"email\": \"carlos@example.com\",\n  \"phone\": \"3009876543\",\n  \"birthdate\": \"1985-06-20\",\n  \"sex\": 1,\n  \"identification\": \"9876543210\",\n  \"height\": 1.80,\n  \"identificationTypeId\": 1\n}"
+            },
+            "url": "{{base_url}}/api/trainers/{{trainer_id}}"
+          }
+        },
+        {
+          "name": "Delete Trainer",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/trainers/{{trainer_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Plans",
+      "item": [
+        {
+          "name": "List Plans",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/plans?per_page=25"
+          }
+        },
+        {
+          "name": "Create Plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"PLAN-001\",\n  \"name\": \"Plan Mensual\",\n  \"description\": \"Acceso ilimitado por 30 días\",\n  \"price\": 49.99,\n  \"isActive\": true,\n  \"details\": [\n    { \"item\": \"Acceso ilimitado\", \"isActive\": true },\n    { \"item\": \"Clases grupales\", \"isActive\": true }\n  ]\n}"
+            },
+            "url": "{{base_url}}/api/plans"
+          }
+        },
+        {
+          "name": "Show Plan",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/plans/{{plan_id}}"
+          }
+        },
+        {
+          "name": "Update Plan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"PLAN-001\",\n  \"name\": \"Plan Mensual Plus\",\n  \"description\": \"Acceso ilimitado actualizado\",\n  \"price\": 59.99,\n  \"isActive\": true,\n  \"details\": [\n    { \"id\": 1, \"item\": \"Acceso ilimitado\", \"isActive\": true }\n  ]\n}"
+            },
+            "url": "{{base_url}}/api/plans/{{plan_id}}"
+          }
+        },
+        {
+          "name": "Delete Plan",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/plans/{{plan_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Subscriptions (Payments)",
+      "item": [
+        {
+          "name": "List Subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/payments?per_page=25"
+          }
+        },
+        {
+          "name": "Create Subscription",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SUB-001\",\n  \"startDate\": \"2026-06-01\",\n  \"endDate\": \"2026-07-01\",\n  \"price\": 49.99,\n  \"userId\": 1,\n  \"planId\": 1,\n  \"suscriptionTypeId\": 3,\n  \"statusId\": 5\n}"
+            },
+            "url": "{{base_url}}/api/payments"
+          }
+        },
+        {
+          "name": "Show Subscription",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/payments/{{payment_id}}"
+          }
+        },
+        {
+          "name": "Update Subscription",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SUB-001\",\n  \"startDate\": \"2026-06-01\",\n  \"endDate\": \"2026-08-01\",\n  \"price\": 49.99,\n  \"userId\": 1,\n  \"planId\": 1,\n  \"suscriptionTypeId\": 3,\n  \"statusId\": 5\n}"
+            },
+            "url": "{{base_url}}/api/payments/{{payment_id}}"
+          }
+        },
+        {
+          "name": "Delete Subscription",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/payments/{{payment_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Access Control",
+      "item": [
+        {
+          "name": "List Access Records",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/access-control?per_page=25"
+          }
+        },
+        {
+          "name": "Register Access - Allowed",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identification\": \"1234567890\",\n  \"date\": \"2026-06-17\"\n}"
+            },
+            "url": "{{base_url}}/api/access-control"
+          }
+        },
+        {
+          "name": "Register Access - Today",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identification\": \"1234567890\"\n}"
+            },
+            "url": "{{base_url}}/api/access-control"
+          }
+        },
+        {
+          "name": "Register Access - Not Found",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identification\": \"0000000000\"\n}"
+            },
+            "url": "{{base_url}}/api/access-control"
+          }
+        }
+      ]
+    }
+  ]
+}

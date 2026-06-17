@@ -6,30 +6,28 @@ use App\Actions\Users\CreateUser;
 use App\Actions\Users\UpdateUser;
 use App\Constants\ApiStatuses;
 use App\Constants\ErrorMessages;
+use App\Enums\RoleEnum;
 use App\Helpers\MessageHelper;
 use App\Http\Controllers\API\Concerns\QueriesUsers;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TrainerRequest;
 use App\Http\Requests\UserListRequest;
-use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Traits\Api\ApiResponse;
 use Illuminate\Http\JsonResponse;
 
-class UserController extends Controller
+class TrainerController extends Controller
 {
     use ApiResponse, QueriesUsers;
 
-    private const ENTITY = 'Usuario';
+    private const ENTITY = 'Entrenador';
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(UserListRequest $request): JsonResponse
     {
         $validated = $request->validated();
 
-        $query = $this->buildUsersQuery($validated);
+        $query = $this->buildUsersQuery($validated, RoleEnum::TRAINING->value);
         [$users, $meta] = $this->paginateOrGetUsers($query, $validated);
 
         return $this->successResponse(
@@ -39,18 +37,13 @@ class UserController extends Controller
         );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(UserRequest $request): JsonResponse
+    public function store(TrainerRequest $request): JsonResponse
     {
         try {
             $response = (new CreateUser)->execute($request->all());
 
-            $user = $response['user'];
-
             return $this->successResponse(
-                new UserResource($user->load(['role', 'identificationType', 'status'])),
+                new UserResource($response['user']->load(['role', 'identificationType', 'status'])),
                 MessageHelper::make(self::ENTITY, __FUNCTION__)
             );
         } catch (\Exception $e) {
@@ -62,29 +55,21 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user): JsonResponse
+    public function show(User $trainer): JsonResponse
     {
         return $this->successResponse(
-            new UserResource($user->load(['role', 'identificationType', 'status'])),
+            new UserResource($trainer->load(['role', 'identificationType', 'status'])),
             MessageHelper::make(self::ENTITY, __FUNCTION__)
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UserRequest $request, User $user): JsonResponse
+    public function update(TrainerRequest $request, User $trainer): JsonResponse
     {
         try {
-            $response = (new UpdateUser)->execute($user->id, $request->all());
-
-            $user = $response['user'];
+            $response = (new UpdateUser)->execute($trainer->id, $request->all());
 
             return $this->successResponse(
-                new UserResource($user->load(['role', 'identificationType', 'status'])),
+                new UserResource($response['user']->load(['role', 'identificationType', 'status'])),
                 MessageHelper::make(self::ENTITY, __FUNCTION__)
             );
         } catch (\Exception $e) {
@@ -96,12 +81,9 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(User $user): JsonResponse
+    public function destroy(User $trainer): JsonResponse
     {
-        $user->delete();
+        $trainer->delete();
 
         return $this->successResponse(
             message: MessageHelper::make(self::ENTITY, __FUNCTION__)

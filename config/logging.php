@@ -134,6 +134,27 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'PlanError' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/PlanError.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
+        'SuscriptionError' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/SuscriptionError.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
+        'AccessControlError' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/AccessControlError.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
     ],
 
 ];

@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\RoleEnum;
 use App\Enums\SexEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -39,7 +41,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * Get the attributes that should be cast.
@@ -116,5 +118,25 @@ class User extends Authenticatable
     public function weightControls(): HasMany
     {
         return $this->hasMany(WeightControl::class);
+    }
+
+    public function suscriptions(): HasMany
+    {
+        return $this->hasMany(Suscription::class);
+    }
+
+    public function accessControls(): HasMany
+    {
+        return $this->hasMany(AccessControl::class);
+    }
+
+    public function scopeMembers(Builder $query): Builder
+    {
+        return $query->where('role_id', RoleEnum::MEMBER->value);
+    }
+
+    public function scopeTrainers(Builder $query): Builder
+    {
+        return $query->where('role_id', RoleEnum::TRAINING->value);
     }
 }

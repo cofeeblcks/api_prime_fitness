@@ -13,4 +13,8 @@ class LookupMessages
     public const CITIES = 'Ciudades obtenidas correctamente';
 
     public const ROLES = 'Roles obtenidos correctamente';
+
+    public const PLANS = 'Planes obtenidos correctamente';
+
+    public const SUSCRIPTION_TYPES = 'Tipos de membresía obtenidos correctamente';
 }

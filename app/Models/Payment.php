@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -22,7 +22,6 @@ class Payment extends Model
     protected function casts(): array
     {
         return [
-            'is_active' => 'boolean',
             'start_date' => 'date',
             'end_date' => 'date',
             'payment_date' => 'date',
