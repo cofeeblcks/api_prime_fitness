@@ -19,9 +19,6 @@ class AuthController extends Controller
 
     public function login(AuthRequest $request): JsonResponse
     {
-        return $this->successResponse(
-            $request->all(),
-        );
         try {
             if (Auth::attempt($request->only('email', 'password'))) {
                 $user = User::where('email', $request->email)
