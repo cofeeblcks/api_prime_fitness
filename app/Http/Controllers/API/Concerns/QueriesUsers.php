@@ -4,17 +4,13 @@ namespace App\Http\Controllers\API\Concerns;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 trait QueriesUsers
 {
     protected function buildUsersQuery(array $validated, ?int $roleId = null): Builder
     {
         $query = User::query()
-            ->with(['role', 'identificationType', 'status'])
-            ->orderBy('first_name')
-            ->orderBy('last_name');
+            ->with(['role.modules', 'identificationType', 'status']);
 
         if ($roleId !== null) {
             $query->where('role_id', $roleId);
@@ -36,7 +32,9 @@ trait QueriesUsers
             });
         }
 
-        return $query;
+        return $query
+            ->orderBy('first_name')
+            ->orderBy('last_name');
     }
 
     /**
