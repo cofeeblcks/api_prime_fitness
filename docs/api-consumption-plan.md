@@ -1,6 +1,6 @@
 # Plan de implementación — Consumo de API Prime Fitness
 
-Documento único de referencia para integrar la API en el **frontend web (React.js)** y la **app móvil (Flutter)**.
+Documento único de referencia para integrar la API en el **frontend web (React.js)** y la **app móvil (React Native)**.
 
 ---
 
@@ -34,10 +34,10 @@ Definir cómo consumir la API REST de Prime Fitness desde ambos clientes, incluy
 VITE_API_BASE_URL=http://localhost:8000/api
 ```
 
-**Flutter (dart-define o .env)**
+**React Native (.env con Expo o react-native-config)**
 
 ```env
-API_BASE_URL=http://localhost:8000/api
+EXPO_PUBLIC_API_BASE_URL=http://localhost:8000/api
 ```
 
 ---
@@ -172,72 +172,76 @@ export const memberService = {
 };
 ```
 
-### 4.2 Flutter
+### 4.2 React Native
 
 ```
-lib/
-├── core/
-│   ├── api/
-│   │   ├── api_client.dart       # Dio + interceptores
-│   │   ├── api_response.dart     # Modelo genérico envelope
-│   │   └── api_exception.dart
-│   └── storage/
-│       └── secure_storage.dart   # flutter_secure_storage para token
-├── features/
-│   ├── auth/
-│   │   ├── data/auth_repository.dart
-│   │   └── presentation/
-│   ├── members/
-│   └── ...
-└── main.dart
+src/
+├── api/
+│   ├── client.ts              # Axios + interceptores
+│   ├── types/                 # Interfaces TypeScript
+│   └── services/              # authService, memberService, etc.
+├── hooks/                     # useAuth, useMembers, usePlans...
+├── context/                   # AuthContext (token + usuario)
+├── navigation/                # React Navigation (stack, tabs, drawer)
+├── screens/                   # Pantallas por módulo
+└── utils/
+    ├── apiError.ts            # Normalizar errores 401/422
+    └── secureStorage.ts       # expo-secure-store o react-native-keychain
 ```
 
-**Cliente HTTP (Dio recomendado)**
+**Cliente HTTP (Axios recomendado)**
 
-```dart
-// api_client.dart
-import 'package:dio/dio.dart';
+```typescript
+// api/client.ts
+import axios from 'axios';
+import * as SecureStore from 'expo-secure-store';
 
-class ApiClient {
-  final Dio _dio;
+const api = axios.create({
+  baseURL: process.env.EXPO_PUBLIC_API_BASE_URL,
+  headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+});
 
-  ApiClient({required String baseUrl, TokenStorage? storage})
-      : _dio = Dio(BaseOptions(
-          baseUrl: baseUrl,
-          headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-        )) {
-    _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        final token = await storage?.readToken();
-        if (token != null) options.headers['Authorization'] = 'Bearer $token';
-        handler.next(options);
-      },
-      onError: (error, handler) {
-        if (error.response?.statusCode == 401) {
-          storage?.clearToken();
-        }
-        handler.next(error);
-      },
-    ));
+api.interceptors.request.use(async (config) => {
+  const token = await SecureStore.getItemAsync('access_token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+api.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    if (error.response?.status === 401) {
+      await SecureStore.deleteItemAsync('access_token');
+      // Redirigir a Login vía navigation ref o evento global
+    }
+    return Promise.reject(error);
   }
+);
 
-  Dio get dio => _dio;
-}
+export default api;
 ```
 
-**Modelo de respuesta genérico**
+**Patrón de servicio**
 
-```dart
-class ApiResponse<T> {
-  final String status;
-  final String? message;
-  final T? data;
-  final Map<String, dynamic>? meta;
+```typescript
+// api/services/memberService.ts
+import api from '../client';
+import type { ApiResponse, User } from '../types';
 
-  ApiResponse({required this.status, this.message, this.data, this.meta});
+export const memberService = {
+  list: (params?: { search?: string; page?: number; per_page?: number }) =>
+    api.get<ApiResponse<User[]>>('/members', { params }),
 
-  bool get isSuccess => status == 'success';
-}
+  create: (data: CreateMemberPayload) =>
+    api.post<ApiResponse<User>>('/members', data),
+
+  get: (id: number) => api.get<ApiResponse<User>>(`/members/${id}`),
+
+  update: (id: number, data: Partial<CreateMemberPayload>) =>
+    api.put<ApiResponse<User>>(`/members/${id}`, data),
+
+  remove: (id: number) => api.delete<ApiResponse<[]>>(`/members/${id}`),
+};
 ```
 
 ---
@@ -256,7 +260,7 @@ Tras el login, el objeto `user.role.modules` indica qué secciones puede ver el 
 | `access-control` | `/access-control` | Registro de ingreso al gym |
 
 **React:** ocultar rutas del menú según `user.role.modules[].route`.  
-**Flutter:** filtrar ítems del `BottomNavigationBar` / `Drawer` con la misma lógica.
+**React Native:** filtrar ítems del `Tab.Navigator` / `Drawer` con la misma lógica.
 
 ### Roles del sistema
 
@@ -324,12 +328,12 @@ Content-Type: application/json
 
 **Implementación**
 
-| Paso | React | Flutter |
-|------|-------|---------|
+| Paso | React | React Native |
+|------|-------|--------------|
 | 1 | Pantalla login con email/password | Igual |
-| 2 | Guardar `access_token` en localStorage | Guardar en `flutter_secure_storage` |
-| 3 | Guardar `user` en AuthContext | Guardar en provider/Bloc |
-| 4 | Redirigir al dashboard | Navegar a `HomeScreen` |
+| 2 | Guardar `access_token` en localStorage | Guardar en `expo-secure-store` o `react-native-keychain` |
+| 3 | Guardar `user` en AuthContext | Guardar en AuthContext (mismo patrón) |
+| 4 | Redirigir al dashboard | Navegar a pantalla principal (`navigation.reset`) |
 | 5 | Construir menú desde `role.modules` | Igual |
 
 ### 6.2 Recuperación de contraseña
@@ -949,7 +953,7 @@ Valida membresía activa del miembro para la fecha indicada.
 }
 ```
 
-> **UI móvil (Flutter):** pantalla de escaneo/ingreso de documento ideal para este endpoint.  
+> **UI móvil (React Native):** pantalla de escaneo/ingreso de documento ideal para este endpoint.  
 > **UI web (React):** pantalla de recepción con input de identificación y feedback visual (verde/rojo).
 
 ---
@@ -1021,28 +1025,20 @@ export interface Subscription {
 }
 ```
 
-### Dart (Flutter)
+### TypeScript (React Native)
 
-```dart
-class User {
-  final int id;
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String identification;
-  // fromJson / toJson para cada modelo...
+Los tipos son los mismos que en React web (sección anterior). Se recomienda compartirlos en un paquete común o copiarlos en `src/api/types/` de la app móvil.
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
-    id: json['id'],
-    firstName: json['firstName'],
-    lastName: json['lastName'],
-    email: json['email'],
-    identification: json['identification'],
-  );
+```typescript
+// Ejemplo: tipado de respuesta de login
+export interface LoginResponse {
+  access_token: string;
+  token_type: 'Bearer';
+  user: User;
 }
 ```
 
-> Recomendación: usar `json_serializable` o `freezed` en Flutter y generar modelos desde los ejemplos de este documento.
+> Recomendación: reutilizar las interfaces de `ApiResponse`, `User`, `Plan` y `Subscription` del bloque TypeScript (React) para mantener paridad entre web y móvil.
 
 ---
 
@@ -1050,12 +1046,12 @@ class User {
 
 ### Fase 1 — Infraestructura (ambas plataformas)
 
-| # | Tarea | React | Flutter |
-|---|-------|-------|---------|
-| 1 | Configurar cliente HTTP + interceptores | Axios | Dio |
-| 2 | Modelo `ApiResponse<T>` genérico | TS interface | Dart class |
-| 3 | Manejo de errores 401/422 | Interceptor + toast | Interceptor + SnackBar |
-| 4 | Variables de entorno | `VITE_API_BASE_URL` | `--dart-define` |
+| # | Tarea | React | React Native |
+|---|-------|-------|--------------|
+| 1 | Configurar cliente HTTP + interceptores | Axios | Axios |
+| 2 | Modelo `ApiResponse<T>` genérico | TS interface | TS interface (mismos tipos) |
+| 3 | Manejo de errores 401/422 | Interceptor + toast | Interceptor + Toast / Alert |
+| 4 | Variables de entorno | `VITE_API_BASE_URL` | `EXPO_PUBLIC_API_BASE_URL` |
 
 ### Fase 2 — Autenticación
 
@@ -1089,14 +1085,14 @@ class User {
 | Plataforma | Pantalla | Endpoint |
 |------------|----------|----------|
 | React (recepción) | Input documento + historial | `POST /access-control`, `GET /access-control` |
-| Flutter (portería) | Escáner / teclado numérico | `POST /access-control` |
+| React Native (portería) | Escáner / teclado numérico | `POST /access-control` |
 
 ### Fase 6 — Pulido
 
 - Paginación y búsqueda en tablas
 - Loading states y empty states
 - Reintento en errores de red
-- Cache de lookups (React Query / Flutter cache)
+- Cache de lookups (React Query / TanStack Query en ambas plataformas)
 - Subida de foto con `multipart/form-data` en usuarios
 
 ---
@@ -1120,11 +1116,11 @@ class User {
 - [ ] Rutas protegidas con guard de autenticación
 - [ ] Formularios con validación client-side alineada a la API
 
-**Flutter**
+**React Native**
 
-- [ ] `flutter_secure_storage` para token
-- [ ] Repository pattern por feature
-- [ ] State management (Bloc/Riverpod/Provider) por módulo
+- [ ] `expo-secure-store` o `react-native-keychain` para token
+- [ ] Servicios por módulo en `api/services/`
+- [ ] AuthContext + React Navigation con guards por módulo
 
 ---
 

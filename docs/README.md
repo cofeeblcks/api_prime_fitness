@@ -101,7 +101,7 @@ Cada recurso requiere que el rol del usuario autenticado tenga acceso al módulo
 
 Parámetros opcionales: `page`, `per_page` (máx. 100).
 
-## Plan de consumo (React + Flutter)
+## Plan de consumo (React + React Native)
 
 - [Plan de implementación — consumo de API](api-consumption-plan.md)
 
