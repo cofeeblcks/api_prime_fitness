@@ -21,10 +21,10 @@ final class UpdateUser
             $user = User::findOrFail($userId);
             if (isset($data['photo']) && ! is_string($data['photo'])) {
                 if ($user->photo) {
-                    File::exists(storage_path('app/public/'.$user->photo)) ? Storage::delete($user->photo) : null;
+                    File::exists(storage_path('app/'.config('filesystems.default').'/'.$user->photo)) ? Storage::delete($user->photo) : null;
                 }
 
-                $data['photo'] = $data['photo']->store('images/profiles', ['disk' => env('FILESYSTEM_DISK')]);
+                $data['photo'] = $data['photo']->store('images/profiles', ['disk' => config('filesystems.default')]);
             }
             $user->fill($this->fillData(User::class, $data));
             $user->save();

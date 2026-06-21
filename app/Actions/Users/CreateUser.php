@@ -23,7 +23,7 @@ final class CreateUser
             }
 
             if (isset($data['photo']) && ! is_null($data['photo']) && ! is_string($data['photo'])) {
-                $data['photo'] = $data['photo']->store('images/profiles', ['disk' => env('FILESYSTEM_DISK')]);
+                $data['photo'] = $data['photo']->store('images/profiles', ['disk' => config('filesystems.default')]);
             }
 
             $user->fill($this->fillData(User::class, $data));

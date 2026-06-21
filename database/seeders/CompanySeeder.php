@@ -22,7 +22,7 @@ class CompanySeeder extends Seeder
             $logoName = $logoFile->getFilename();
             $logoPath = $logoFile->getRealPath();
             $logoContent = File::get($logoPath);
-            Storage::disk(config('filesystems.default'))->put('companies/logos/' . $logoName, $logoContent);
+            Storage::disk(config('filesystems.default'))->put('images/companies/logos/'.$logoName, $logoContent);
         }
 
         $company = Company::create([

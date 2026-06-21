@@ -21,7 +21,7 @@ class Company extends Model
 {
     use SoftDeletes;
 
-    protected function urlLogo(): Attribute
+    protected function logo(): Attribute
     {
         return Attribute::make(
             get: fn (?string $value) => $value ? Storage::url($value) : null,

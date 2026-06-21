@@ -13,7 +13,7 @@ class CompanyResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slogan' => $this->slogan,
-            'logo' => $this->url_logo,
+            'logo' => $this->logo,
             'address' => $this->address,
             'description' => $this->description,
             'links' => CompanyLinkResource::collection($this->whenLoaded('links')),
