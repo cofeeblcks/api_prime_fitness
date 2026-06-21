@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Actions\Users\UpdateUser;
 use App\Actions\WeightControls\CreateWeightControl;
 use App\Constants\ApiStatuses;
 use App\Constants\ErrorMessages;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\WeightControlRequest;
 use App\Http\Resources\SuscriptionResource;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\WeightControlResource;
 use App\Models\Suscription;
 use App\Traits\Api\ApiResponse;
@@ -20,12 +23,37 @@ class MeController extends Controller
 
     public function show(Request $request): JsonResponse
     {
-        $user = $request->user()->load(['role.modules', 'qrCode']);
+        $user = $request->user()->load(['role.modules', 'identificationType', 'status', 'qrCode']);
 
         return $this->successResponse(
-            new AuthResource($user),
+            new UserResource($user),
             'Perfil obtenido correctamente'
         );
+    }
+
+    public function update(ProfileUpdateRequest $request): JsonResponse
+    {
+        try {
+            $response = (new UpdateUser)->execute($request->user()->id, $request->all());
+
+            if (! $response['success']) {
+                return $this->errorResponse(
+                    $response['message'],
+                    ApiStatuses::STATUS_INTERNAL_SERVER_ERROR
+                );
+            }
+
+            return $this->successResponse(
+                new UserResource($response['user']->load(['role.modules', 'identificationType', 'status', 'qrCode'])),
+                'Perfil actualizado correctamente'
+            );
+        } catch (\Exception $e) {
+            return $this->errorResponse(
+                ErrorMessages::SERVER_ERROR,
+                ApiStatuses::STATUS_INTERNAL_SERVER_ERROR,
+                $e
+            );
+        }
     }
 
     public function subscriptions(Request $request): JsonResponse

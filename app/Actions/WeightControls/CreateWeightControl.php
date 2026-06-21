@@ -19,8 +19,7 @@ final class CreateWeightControl
                 throw new \InvalidArgumentException('Debes registrar tu estatura en el perfil antes de controlar tu peso.');
             }
 
-            $heightMeters = $user->height / 100;
-            $imc = $weight / ($heightMeters ** 2);
+            $imc = $weight / ($user->height ** 2);
 
             $imcType = ImcType::query()
                 ->where('min_value', '<=', $imc)

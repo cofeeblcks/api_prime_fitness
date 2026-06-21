@@ -64,6 +64,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('me')->group(function () {
         Route::get('/', [MeController::class, 'show']);
+        Route::put('/', [MeController::class, 'update']);
         Route::get('subscriptions', [MeController::class, 'subscriptions']);
         Route::get('weight-controls', [MeController::class, 'weightControls']);
         Route::post('weight-controls', [MeController::class, 'storeWeightControl']);
