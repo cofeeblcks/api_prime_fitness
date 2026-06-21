@@ -43,6 +43,14 @@ class AccessControlController extends Controller
             });
         }
 
+        if (! empty($validated['startDate'])) {
+            $query->whereDate('created_at', '>=', $validated['startDate']);
+        }
+
+        if (! empty($validated['endDate'])) {
+            $query->whereDate('created_at', '<=', $validated['endDate']);
+        }
+
         $meta = [];
 
         if (isset($validated['per_page']) && ! empty($validated['per_page'])) {

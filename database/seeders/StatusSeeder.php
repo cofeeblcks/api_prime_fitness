@@ -81,6 +81,20 @@ class StatusSeeder extends Seeder
                 'color' => '#16A085',
                 'status_type_id' => StatusTypesConstants::PAYMENT,
             ],
+
+            // Contacto
+            [
+                'id' => StatusesConstants::CONTACT_REQUEST,
+                'name' => 'Solicitud',
+                'color' => '#F39C12',
+                'status_type_id' => StatusTypesConstants::CONTACT,
+            ],
+            [
+                'id' => StatusesConstants::CONTACT_ANSWERED,
+                'name' => 'Contestado',
+                'color' => '#27AE60',
+                'status_type_id' => StatusTypesConstants::CONTACT,
+            ],
         ];
 
         foreach ($statuses as $status) {

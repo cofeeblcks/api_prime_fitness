@@ -37,5 +37,10 @@ class StatusTypeSeeder extends Seeder
             'id' => StatusTypesConstants::PAYMENT,
             'name' => 'Pagos',
         ]);
+
+        StatusType::create([
+            'id' => StatusTypesConstants::CONTACT,
+            'name' => 'Contactos',
+        ]);
     }
 }

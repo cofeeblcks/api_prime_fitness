@@ -23,7 +23,7 @@ class AuthController extends Controller
             if (Auth::attempt($request->only('email', 'password'))) {
                 $user = User::where('email', $request->email)
                     ->where('status_id', StatusesConstants::ACTIVE)
-                    ->with('role.modules')
+                    ->with(['role.modules', 'qrCode'])
                     ->first();
 
                 if( $user ){

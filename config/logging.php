@@ -141,6 +141,20 @@ return [
             'replace_placeholders' => true,
         ],
 
+        'CompanyError' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/CompanyError.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
+        'ContactError' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/ContactError.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
         'SuscriptionError' => [
             'driver' => 'single',
             'path' => storage_path('logs/SuscriptionError.log'),

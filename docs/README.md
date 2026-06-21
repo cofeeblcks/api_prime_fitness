@@ -89,6 +89,8 @@ Cada recurso requiere que el rol del usuario autenticado tenga acceso al módulo
 | Planes | `/plans` | `plans` |
 | Membresías | `/payments` | `payments` |
 | Control de acceso | `/access-control` | `access-control` |
+| Empresa | `/companies` | `company` |
+| Contactos | `/contacts` | `contacts` |
 
 ## Lookups (sin autenticación)
 
@@ -98,6 +100,8 @@ Cada recurso requiere que el rol del usuario autenticado tenga acceso al módulo
 | GET | `/lookups/roles` | Roles del sistema |
 | GET | `/lookups/plans` | Planes activos |
 | GET | `/lookups/suscription-types` | Tipos de membresía |
+| GET | `/lookups/link-types` | Tipos de enlace (redes sociales) |
+| GET | `/lookups/contact-statuses` | Estados de contacto (Solicitud, Contestado) |
 
 Parámetros opcionales: `page`, `per_page` (máx. 100).
 
@@ -112,6 +116,16 @@ Parámetros opcionales: `page`, `per_page` (máx. 100).
 - [Planes](api/plans.md)
 - [Membresías](api/subscriptions.md)
 - [Control de acceso](api/access-control.md)
+- [Empresa](api/company.md)
+- [Contacto (landing)](api/contact.md)
+- [Contactos (gestión)](api/contacts.md)
+
+## Endpoints públicos
+
+| Método | Endpoint | Descripción |
+|--------|----------|-------------|
+| GET | `/companies/{id}` | Información completa de la empresa (sin autenticación) |
+| POST | `/contact` | Formulario de contacto de la landing (throttle 5/min) |
 
 ## Colección Postman
 

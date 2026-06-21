@@ -28,6 +28,10 @@
     {
       "key": "payment_id",
       "value": "1"
+    },
+    {
+      "key": "company_id",
+      "value": "1"
     }
   ],
   "auth": {
@@ -115,6 +119,97 @@
             "method": "GET",
             "header": [{ "key": "Accept", "value": "application/json" }],
             "url": "{{base_url}}/api/lookups/suscription-types?per_page=25"
+          }
+        },
+        {
+          "name": "Link Types",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/lookups/link-types?per_page=25"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Company",
+      "item": [
+        {
+          "name": "Show Company (Public)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/companies/{{company_id}}"
+          }
+        },
+        {
+          "name": "List Companies",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/companies"
+          }
+        },
+        {
+          "name": "Create Company",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Prime Fitness", "type": "text" },
+                { "key": "slogan", "value": "Tu gimnasio en línea", "type": "text" },
+                { "key": "logo", "type": "file", "src": "" },
+                { "key": "address", "value": "Calle 16 29-22, Floridablanca", "type": "text" },
+                { "key": "description", "value": "Descripción de la empresa", "type": "text" },
+                { "key": "links[0][username]", "value": "primefitness", "type": "text" },
+                { "key": "links[0][link]", "value": "https://www.facebook.com/primefitness", "type": "text" },
+                { "key": "links[0][linkTypeId]", "value": "1", "type": "text" },
+                { "key": "emails[0][email]", "value": "info@primefitness.com", "type": "text" },
+                { "key": "phones[0][phone]", "value": "3178546923", "type": "text" },
+                { "key": "services[0][description]", "value": "Entrenamiento personalizado", "type": "text" }
+              ]
+            },
+            "url": "{{base_url}}/api/companies"
+          }
+        },
+        {
+          "name": "Update Company",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Prime Fitness", "type": "text" },
+                { "key": "slogan", "value": "Tu gimnasio en línea", "type": "text" },
+                { "key": "address", "value": "Calle 16 29-22, Floridablanca", "type": "text" },
+                { "key": "description", "value": "Descripción actualizada", "type": "text" },
+                { "key": "links[0][id]", "value": "1", "type": "text" },
+                { "key": "links[0][username]", "value": "primefitness", "type": "text" },
+                { "key": "links[0][link]", "value": "https://www.facebook.com/primefitness", "type": "text" },
+                { "key": "links[0][linkTypeId]", "value": "1", "type": "text" },
+                { "key": "emails[0][id]", "value": "1", "type": "text" },
+                { "key": "emails[0][email]", "value": "contacto@primefitness.com", "type": "text" },
+                { "key": "phones[0][id]", "value": "1", "type": "text" },
+                { "key": "phones[0][phone]", "value": "3178546923", "type": "text" },
+                { "key": "services[0][id]", "value": "1", "type": "text" },
+                { "key": "services[0][description]", "value": "Servicio actualizado", "type": "text" },
+                { "key": "services[1][description]", "value": "Nuevo servicio", "type": "text" }
+              ]
+            },
+            "url": "{{base_url}}/api/companies/{{company_id}}"
+          }
+        },
+        {
+          "name": "Delete Company",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/companies/{{company_id}}"
           }
         }
       ]
@@ -363,7 +458,7 @@
           "request": {
             "method": "GET",
             "header": [{ "key": "Accept", "value": "application/json" }],
-            "url": "{{base_url}}/api/access-control?per_page=25"
+            "url": "{{base_url}}/api/access-control?startDate=2026-06-01&endDate=2026-06-30&per_page=25"
           }
         },
         {

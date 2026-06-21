@@ -5,7 +5,9 @@ namespace App\Actions\Users;
 use App\Models\User;
 use App\Traits\Models\FillModelData;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 final class UpdateUser
 {
@@ -17,6 +19,13 @@ final class UpdateUser
             DB::beginTransaction();
 
             $user = User::findOrFail($userId);
+            if (isset($data['photo']) && ! is_string($data['photo'])) {
+                if ($user->photo) {
+                    File::exists(storage_path('app/public/'.$user->photo)) ? Storage::delete($user->photo) : null;
+                }
+
+                $data['photo'] = $data['photo']->store('images/profiles', ['disk' => env('FILESYSTEM_DISK')]);
+            }
             $user->fill($this->fillData(User::class, $data));
             $user->save();
 

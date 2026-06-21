@@ -13,4 +13,6 @@ class StatusesConstants
     const SUBSCRIPTION_CANCELLED = 7;
     const PENDING = 8;
     const PAID = 9;
+    const CONTACT_REQUEST = 10;
+    const CONTACT_ANSWERED = 11;
 }

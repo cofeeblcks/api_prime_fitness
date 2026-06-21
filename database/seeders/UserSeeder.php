@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Actions\QrCodes\CreateQrCode;
 use App\Enums\RoleEnum;
 use App\Enums\SexEnum;
 use App\Models\IdentificationType;
@@ -22,7 +23,7 @@ class UserSeeder extends Seeder
             User::truncate();
             DB::statement('SET FOREIGN_KEY_CHECKS=1;');
         }
-        User::firstOrCreate([
+        $user = User::firstOrCreate([
             'first_name' => 'Gestor',
             'last_name' => 'Plataforma',
             'email' => 'gestor.plataforma@primefitness.com',
@@ -36,5 +37,9 @@ class UserSeeder extends Seeder
             'role_id' => RoleEnum::ADMIN->value,
             'identification_type_id' => IdentificationType::where('abbreviation', 'CC')->first()->id,
         ]);
+
+        if( $user->qrCodes->isEmpty() ){
+            (new CreateQrCode($user))->execute();
+        }
     }
 }

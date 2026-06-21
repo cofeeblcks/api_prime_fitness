@@ -17,8 +17,17 @@ Authorization: Bearer {{token}}
 |-----------|------|-------------|
 | `status_id` | integer | 3=permitido, 4=denegado |
 | `search` | string | Busca por nombre o identificación del miembro |
+| `startDate` | date | Fecha inicial del rango (`YYYY-MM-DD`). Filtra por `createdAt` |
+| `endDate` | date | Fecha final del rango (`YYYY-MM-DD`). Debe ser ≥ `startDate` |
 | `per_page` | integer | Paginación (1-100) |
 | `page` | integer | Página actual |
+
+### Ejemplo con rango de fechas
+
+```http
+GET /api/access-control?startDate=2026-06-01&endDate=2026-06-30&per_page=25
+Authorization: Bearer {{token}}
+```
 
 ### Respuesta
 

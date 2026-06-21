@@ -95,7 +95,52 @@ class ModuleSeeder extends Seeder
                 'roles' => [
                     RoleEnum::ADMIN->value,
                 ],
-            ]
+            ],
+            [
+                'id' => 8,
+                'name' => 'Empresa',
+                'route' => 'company',
+                'icon' => 'building-03',
+                'order' => 8,
+                'is_active' => true,
+                'roles' => [
+                    RoleEnum::ADMIN->value,
+                ],
+            ],
+            [
+                'id' => 9,
+                'name' => 'Mis membresías',
+                'route' => 'my-subscriptions',
+                'icon' => 'payment-01',
+                'order' => 9,
+                'is_active' => true,
+                'roles' => [
+                    RoleEnum::MEMBER->value,
+                ],
+            ],
+            [
+                'id' => 10,
+                'name' => 'Control de peso',
+                'route' => 'weight-control',
+                'icon' => 'weight-scale',
+                'order' => 10,
+                'is_active' => true,
+                'roles' => [
+                    RoleEnum::MEMBER->value,
+                ],
+            ],
+            [
+                'id' => 11,
+                'name' => 'Contactos',
+                'route' => 'contacts',
+                'icon' => 'mail-01',
+                'order' => 11,
+                'is_active' => true,
+                'roles' => [
+                    RoleEnum::ADMIN->value,
+                    RoleEnum::RECEPTIONIST->value,
+                ],
+            ],
         ];
 
         foreach ($modules as $module) {

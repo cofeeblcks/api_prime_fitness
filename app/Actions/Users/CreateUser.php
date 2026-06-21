@@ -2,13 +2,11 @@
 
 namespace App\Actions\Users;
 
-use App\Models\Locus;
-use App\Models\Table;
+use App\Actions\QrCodes\CreateQrCode;
 use App\Models\User;
 use App\Traits\Models\FillModelData;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 final class CreateUser
 {
@@ -23,8 +21,17 @@ final class CreateUser
             if( !isset($data['password']) ){
                 $data['password'] = uniqid();
             }
+
+            if (isset($data['photo']) && ! is_null($data['photo']) && ! is_string($data['photo'])) {
+                $data['photo'] = $data['photo']->store('images/profiles', ['disk' => env('FILESYSTEM_DISK')]);
+            }
+
             $user->fill($this->fillData(User::class, $data));
             $user->save();
+
+            if( $user->qrCodes->isEmpty() ){
+                (new CreateQrCode($user))->execute();
+            }
 
             DB::commit();
 

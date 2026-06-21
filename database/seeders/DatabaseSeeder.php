@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Actions\QrCodes\CreateQrCode;
 use App\Models\ImcType;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -25,6 +26,8 @@ class DatabaseSeeder extends Seeder
             ModuleSeeder::class,
             SuscriptionTypeSeeder::class,
             ImcTypeSeeder::class,
+            LinkTypeSeeder::class,
+            CompanySeeder::class,
         ]);
 
         if (config('app.env') === 'local') {
@@ -42,6 +45,10 @@ class DatabaseSeeder extends Seeder
                     'imc' => $imc,
                     'imc_type_id' => $imcType->id,
                 ]);
+
+                if( $user->qrCodes->isEmpty() ){
+                    (new CreateQrCode($user))->execute();
+                }
             });
         }
     }

@@ -9,6 +9,8 @@ class AccessControlListRequest extends PaginationRequest
         return array_merge(parent::rules(), [
             'status_id' => ['nullable', 'integer', 'exists:statuses,id'],
             'search' => ['nullable', 'string'],
+            'startDate' => ['nullable', 'date'],
+            'endDate' => ['nullable', 'date', 'after_or_equal:startDate'],
         ]);
     }
 
@@ -18,6 +20,9 @@ class AccessControlListRequest extends PaginationRequest
             'status_id.integer' => 'El estado debe ser un número entero.',
             'status_id.exists' => 'El estado seleccionado no es válido.',
             'search.string' => 'El campo de búsqueda debe ser una cadena de texto.',
+            'startDate.date' => 'La fecha de inicio debe tener un formato válido.',
+            'endDate.date' => 'La fecha de fin debe tener un formato válido.',
+            'endDate.after_or_equal' => 'La fecha de fin debe ser posterior o igual a la fecha de inicio.',
         ]);
     }
 }

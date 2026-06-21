@@ -11,4 +11,6 @@ class StatusTypesConstants
     const SUBSCRIPTION = 3;
 
     const PAYMENT = 4;
+
+    const CONTACT = 5;
 }

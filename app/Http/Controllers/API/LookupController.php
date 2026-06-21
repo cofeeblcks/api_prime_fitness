@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\API;
 
 use App\Constants\LookupMessages;
+use App\Constants\StatusTypesConstants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PaginationRequest;
 use App\Models\IdentificationType;
+use App\Models\LinkType;
 use App\Models\Plan;
 use App\Models\Role;
+use App\Models\Status;
 use App\Models\SuscriptionType;
 use App\Traits\Api\ApiResponse;
 use Illuminate\Http\JsonResponse;
@@ -73,7 +76,10 @@ class LookupController extends Controller
     public function plans(PaginationRequest $request): JsonResponse
     {
         return $this->getResponse($request, Plan::class, LookupMessages::PLANS, function ($query) {
-            return $query->where('is_active', true)->orderBy('name');
+            return $query
+                ->where('is_active', true)
+                ->with('details')
+                ->orderBy('name');
         });
     }
 
@@ -84,6 +90,28 @@ class LookupController extends Controller
     {
         return $this->getResponse($request, SuscriptionType::class, LookupMessages::SUSCRIPTION_TYPES, function ($query) {
             return $query->orderBy('name');
+        });
+    }
+
+    /**
+     * Tipos de link
+     */
+    public function linkTypes(PaginationRequest $request): JsonResponse
+    {
+        return $this->getResponse($request, LinkType::class, LookupMessages::LINK_TYPES, function ($query) {
+            return $query->orderBy('name');
+        });
+    }
+
+    /**
+     * Estados de contacto (Solicitud, Contestado).
+     */
+    public function contactStatuses(PaginationRequest $request): JsonResponse
+    {
+        return $this->getResponse($request, Status::class, LookupMessages::CONTACT_STATUSES, function ($query) {
+            return $query
+                ->where('status_type_id', StatusTypesConstants::CONTACT)
+                ->orderBy('id');
         });
     }
 }

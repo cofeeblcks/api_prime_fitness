@@ -107,6 +107,15 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function qrCode(): BelongsToMany
+    {
+        return $this->belongsToMany(QrCode::class)
+            ->withPivot('id')
+            ->withTimestamps()
+            ->orderByDesc('qr_code_user.created_at')
+            ->limit(1);
+    }
+
     public function fingerprints(): BelongsToMany
     {
         return $this->belongsToMany(Finger::class)

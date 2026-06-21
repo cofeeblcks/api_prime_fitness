@@ -17,4 +17,8 @@ class LookupMessages
     public const PLANS = 'Planes obtenidos correctamente';
 
     public const SUSCRIPTION_TYPES = 'Tipos de membresía obtenidos correctamente';
+
+    public const LINK_TYPES = 'Tipos de link obtenidos correctamente';
+
+    public const CONTACT_STATUSES = 'Estados de contacto obtenidos correctamente';
 }

@@ -30,6 +30,11 @@ class UserResource extends JsonResource
             'identificationType' => new IdentificationTypeResource($this->whenLoaded('identificationType')),
             'role' => new RoleResource($this->whenLoaded('role')),
             'status' => new StatusResource($this->whenLoaded('status')),
+            'qrCode' => $this->whenLoaded('qrCode', function () {
+                $code = $this->qrCode->first();
+
+                return $code ? new QrCodeResource($code) : null;
+            }),
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];

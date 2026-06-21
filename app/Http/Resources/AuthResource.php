@@ -19,7 +19,13 @@ class AuthResource extends JsonResource
             'initials' => $this->initials,
             'fullName' => $this->full_name,
             'email' => $this->email,
-            'role' => new RoleResource($this->role),
+            'photo' => $this->photo,
+            'role' => new RoleResource($this->whenLoaded('role')),
+            'qrCode' => $this->whenLoaded('qrCode', function () {
+                $code = $this->qrCode->first();
+
+                return $code ? new QrCodeResource($code) : null;
+            }),
         ];
     }
 }
